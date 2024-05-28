@@ -39,6 +39,11 @@
         dest: C:\nginx
         creates: C:\nginx\nginx-1.8.0\nginx.exe
 
+    - name: Verify nginx.exe exists
+      ansible.windows.win_stat:
+        path: C:\nginx\nginx-1.8.0\nginx.exe
+      register: nginx_exe
+
     - name: Start nginx
       ansible.windows.win_command: |
         C:\nginx\nginx-1.8.0\nginx.exe
