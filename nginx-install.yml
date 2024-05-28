@@ -50,12 +50,6 @@
         path: C:\Users\Admin\Downloads\nginx\logs
         state: directory
 
-    - name: Copy default nginx.conf
-      ansible.windows.win_copy:
-        src: C:\Users\Admin\Downloads\nginx\nginx-1.18.0\conf\nginx.conf
-        dest: C:\Users\Admin\Downloads\nginx\conf\nginx.conf
-        remote_src: yes
-
     - name: Verify nginx.exe exists
       ansible.windows.win_stat:
         path: C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe
