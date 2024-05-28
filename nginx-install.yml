@@ -1,47 +1,53 @@
- 1  ---
- 2  - name: Install and configure nginx on Windows
- 3    hosts: 172.16.0.67
- 4    tasks:
- 5      - name: Ensure the download directory exists
- 6        ansible.windows.win_file:
- 7          path: C:\Users\Admin\Downloads
- 8          state: directory
- 9
-10      - name: Debug: Download directory exists
-11        ansible.builtin.debug:
-12          msg: "Download directory exists"
-13
-14      - name: Download nginx
-15        ansible.windows.win_get_url:
-16          url: https://nginx.org/download/nginx-1.18.0.zip
-17          dest: C:\Users\Admin\Downloads\nginx.zip
-18
-19      - name: Debug: NGINX zip downloaded
-20        ansible.builtin.debug:
-21          msg: "NGINX zip downloaded"
-22
-23      - name: Extract nginx
-24        ansible.windows.win_shell: |
-25          Expand-Archive -Path C:\Users\Admin\Downloads\nginx.zip -DestinationPath C:\Users\Admin\Downloads\nginx
-26
-27      - name: Debug: NGINX extracted
-28        ansible.builtin.debug:
-29          msg: "NGINX extracted"
-30
-31      - name: Install nginx
-32        ansible.windows.win_command: |
-33          C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe /S
-34        args:
-35          chdir: C:\Users\Admin\Downloads\nginx\nginx-1.18.0
-36        register: nginx_install_result
-37
-38      - name: Debug: NGINX installation result
-39        ansible.builtin.debug:
-40          var: nginx_install_result
-41
-42      - name: Start nginx service
-43        ansible.windows.win_service:
-44          name: nginx
-45          state: started
-46          start_mode: auto
-47        when: nginx_install_result.rc == 0  # Only start service if installation was successful
+---
+- hosts: windows_servers  # Replace with your windows server group
+
+  roles:
+    - nginx  # Replace with the actual role path containing the tasks
+
+  vars:
+    nginx_version: "latest"  # Adjust if needed
+
+  tasks:
+    - name: Install Chocolatey (pre-requisite for package management)
+      win_get:
+        url: https://chocolatey.org/install.ps1
+        dest: C:\Users\Admin\Downloads\chocolatey.ps1
+        state: present
+      become: true
+
+    - name: Install Chocolatey (needs admin rights)
+      win_command: PowerShell -ExecutionPolicy Bypass -NoProfile -File C:\Users\Admin\Downloads\chocolatey.ps1
+      become: true
+
+    - name: Install Nginx using Chocolatey
+      win_chocolatey:
+        name: nginx
+        version: "{{ nginx_version }}"
+        state: present
+
+    - name: Install NSSM for service management
+      win_chocolatey:
+        name: nssm
+        state: present
+
+    - name: Copy Nginx configuration (replace with your actual config file)
+      win_copy:
+        src: path/to/your/nginx.conf
+        dest: C:\nginx\conf\nginx.conf
+        remote_owner: Administrator
+
+    - name: Create Nginx service using NSSM
+      win_nssm:
+        service_name: nginx
+        program_path: C:\nginx\nginx.exe
+        arguments: "-c C:\nginx\conf\nginx.conf"
+        state: present
+        start: yes  # Set to no if you want to start manually
+
+      handlers:
+        - name: Restart Nginx service after creating it
+          win_service:
+            name: nginx
+            state: restarted
+          become: true
+        when: service_changed
