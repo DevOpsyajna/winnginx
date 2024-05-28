@@ -50,9 +50,9 @@
         path: C:\nginx\nginx.exe
       register: nginx_exe
 
-    - name: Debug nginx.exe path
+    - name: Debug nginx.exe existence
       ansible.builtin.debug:
-        msg: "nginx.exe path: {{ nginx_exe.stat.path }}"
+        msg: "nginx.exe exists: {{ nginx_exe.stat.exists }}"
 
     - name: Start nginx
       ansible.windows.win_command: |
