@@ -30,7 +30,7 @@
 
     - name: Install nginx
       ansible.windows.win_command: |
-        C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe
+        Start-Process -FilePath "C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe" -NoNewWindow -Wait
       args:
         chdir: C:\Users\Admin\Downloads\nginx\nginx-1.18.0
       register: nginx_install_result
@@ -38,3 +38,10 @@
     - name: Debug - NGINX installation result
       ansible.builtin.debug:
         var: nginx_install_result
+
+    - name: Start nginx service
+      ansible.windows.win_service:
+        name: nginx
+        state: started
+        start_mode: auto
+      when: nginx_install_result.rc == 0  # Only start service if installation was successful
