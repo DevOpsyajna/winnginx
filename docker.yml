@@ -7,17 +7,6 @@
         path: C:\nginx
         state: directory
 
-    - name: Download NGINX zip file
-      ansible.windows.win_get_url:
-        url: https://nginx.org/download/nginx-1.18.0.zip
-        dest: C:\nginx\nginx.zip
-
-    - name: Unzip NGINX
-      community.windows.win_unzip:
-        src: C:\nginx\nginx.zip
-        dest: C:\nginx
-        creates: C:\nginx\nginx-1.18.0\nginx.exe
-
     - name: Start NGINX service
       ansible.windows.win_service:
         name: nginx
