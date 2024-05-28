@@ -1,6 +1,6 @@
 ---
-- name: Download, Install, and Start NGINX on Windows
-  hosts: 172.16.0.67
+- name: Download, Extract, and Install NGINX on Windows
+  hosts: windows
   tasks:
     - name: Ensure download directory exists
       ansible.windows.win_file:
@@ -12,16 +12,9 @@
         url: https://nginx.org/download/nginx-1.18.0.zip
         dest: C:\Users\Admin\Downloads\nginx.zip
 
-    - name: Unzip NGINX
-      community.windows.win_unzip:
-        src: C:\Users\Admin\Downloads\nginx.zip
-        dest: C:\nginx
-        creates: C:\nginx\nginx.exe
+    - name: Extract NGINX zip file
+      ansible.windows.win_shell: |
+        Expand-Archive -Path C:\Users\Admin\Downloads\nginx.zip -DestinationPath C:\Users\Admin\Downloads\nginx
 
-    - name: Install NGINX service
-      ansible.windows.win_service:
-        name: nginx
-        display_name: NGINX
-        start_mode: auto
-        path: C:\nginx\nginx.exe
-        state: started
+    - name: Install NGINX
+      ansible.windows.win_command: C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe /S
