@@ -47,7 +47,7 @@
 
     - name: Verify nginx.exe exists
       ansible.windows.win_stat:
-        path: C:\nginx\nginx.exe
+        path: C:\nginx\nginx-1.8.0\nginx.exe
       register: nginx_exe
 
     - name: Debug nginx.exe existence
@@ -56,5 +56,5 @@
 
     - name: Start nginx
       ansible.windows.win_command: |
-        C:\nginx\nginx.exe
+        C:\nginx\nginx-1.8.0\nginx.exe
       when: nginx_exe.stat.exists
