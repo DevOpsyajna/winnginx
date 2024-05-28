@@ -16,6 +16,11 @@
         path: C:\nginx
         state: directory
 
+    - name: Ensure nginx is not running
+      ansible.windows.win_shell: |
+        Stop-Process -Name nginx -Force -ErrorAction SilentlyContinue
+      ignore_errors: yes
+
     - name: Unzip nginx
       community.windows.win_unzip:
         src: C:\User\Admin\Downloads\nginx.zip
@@ -29,4 +34,4 @@
 
     - name: Start nginx
       ansible.windows.win_command: |
-        C:\nginx\nginx.exe
+        Start-Process -NoNewWindow -FilePath "C:\nginx\nginx.exe"
