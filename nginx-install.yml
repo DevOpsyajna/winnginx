@@ -3,17 +3,17 @@
   tasks:
     - name: Ensure the download directory exists
       ansible.windows.win_file:
-        path: C:\User\Admin\Downloads
+        path: C:\Users\Admin\Downloads
         state: directory
 
     - name: Download nginx
       ansible.windows.win_get_url:
         url: https://nginx.org/download/nginx-1.18.0.zip
-        dest: C:\User\Admin\Downloads\nginx.zip
+        dest: C:\Users\Admin\Downloads\nginx.zip
 
     - name: Ensure the nginx directory exists
       ansible.windows.win_file:
-        path: C:\nginx
+        path: C:\Users\Admin\Downloads\nginx
         state: directory
 
     - name: Ensure nginx is not running
@@ -30,24 +30,35 @@
 
     - name: Remove existing nginx files if any
       ansible.windows.win_file:
-        path: C:\nginx
+        path: C:\Users\Admin\Downloads\nginx
         state: absent
       when: uninstall_result is not skipped
 
     - name: Recreate nginx directory
       ansible.windows.win_file:
-        path: C:\nginx
+        path: C:\Users\Admin\Downloads\nginx
         state: directory
 
     - name: Unzip nginx
       community.windows.win_unzip:
         src: C:\Users\Admin\Downloads\nginx.zip
-        dest: C:\Users\Admin\Downloads
-        creates: C:\Users\Admin\Downloads\nginx-1.18.0\nginx.exe
+        dest: C:\Users\Admin\Downloads\nginx
+        creates: C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe
+
+    - name: Create nginx logs directory
+      ansible.windows.win_file:
+        path: C:\Users\Admin\Downloads\nginx\logs
+        state: directory
+
+    - name: Copy default nginx.conf
+      ansible.windows.win_copy:
+        src: C:\Users\Admin\Downloads\nginx\nginx-1.18.0\conf\nginx.conf
+        dest: C:\Users\Admin\Downloads\nginx\conf\nginx.conf
+        remote_src: yes
 
     - name: Verify nginx.exe exists
       ansible.windows.win_stat:
-        path: C:\Users\Admin\Downloads\nginx-1.18.0\nginx.exe
+        path: C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe
       register: nginx_exe
 
     - name: Debug nginx.exe existence
@@ -56,5 +67,5 @@
 
     - name: Start nginx
       ansible.windows.win_shell: |
-        Start-Process -NoNewWindow -FilePath "C:\Users\Admin\Downloads\nginx-1.18.0\nginx.exe"
+        Start-Process -NoNewWindow -FilePath "C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe"
       when: nginx_exe.stat.exists
