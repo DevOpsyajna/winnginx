@@ -45,6 +45,17 @@
         dest: C:\nginx
         creates: C:\nginx\nginx-1.18.0\nginx.exe
 
+    - name: Create nginx logs directory
+      ansible.windows.win_file:
+        path: C:\nginx\nginx-1.18.0\logs
+        state: directory
+
+    - name: Copy default nginx.conf
+      ansible.windows.win_copy:
+        src: C:\nginx\nginx-1.18.0\conf\nginx.conf
+        dest: C:\nginx\conf\nginx.conf
+        force: yes
+
     - name: Verify nginx.exe exists
       ansible.windows.win_stat:
         path: C:\nginx\nginx-1.18.0\nginx.exe
