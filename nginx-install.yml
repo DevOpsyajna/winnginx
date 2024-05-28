@@ -37,6 +37,7 @@
       community.windows.win_unzip:
         src: C:\User\Admin\Downloads\nginx.zip
         dest: C:\nginx
+        creates: C:\nginx\nginx-1.8.0\nginx.exe
 
     - name: Start nginx
       ansible.windows.win_command: |
