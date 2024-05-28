@@ -51,10 +51,9 @@
         state: directory
 
     - name: Copy default nginx.conf
-      ansible.windows.win_copy:
-        src: C:\nginx\nginx-1.18.0\conf\nginx.conf
-        dest: C:\nginx\conf\nginx.conf
-        force: yes
+      ansible.windows.win_command: |
+        Copy-Item -Path "C:\nginx\nginx-1.18.0\conf\nginx.conf" -Destination "C:\nginx\conf\nginx.conf" -Force
+      ignore_errors: yes
 
     - name: Verify nginx.exe exists
       ansible.windows.win_stat:
