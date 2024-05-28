@@ -1,15 +1,25 @@
 - name: Install and configure nginx on Windows
   hosts: 172.16.0.67
   tasks:
+    - name: Ensure the download directory exists
+      ansible.windows.win_file:
+        path: C:\User\Admin\Downloads
+        state: directory
+
     - name: Download nginx
       ansible.windows.win_get_url:
         url: https://nginx.org/download/nginx-1.18.0.zip
         dest: C:\User\Admin\Downloads\nginx.zip
 
+    - name: Ensure the nginx directory exists
+      ansible.windows.win_file:
+        path: C:\nginx
+        state: directory
+
     - name: Unzip nginx
       community.windows.win_unzip:
         src: C:\User\Admin\Downloads\nginx.zip
-        dest: C:\User\Admin\Downloads\nginx
+        dest: C:\nginx
         creates: C:\nginx\nginx.exe
 
     - name: Ensure nginx is not installed
@@ -17,12 +27,6 @@
         name: nginx
         state: absent
 
-    - name: Install nginx
-      ansible.windows.win_package:
-        path: C:\User\Admin\Downloads\nginx\nginx-1.18.0.zip
-        state: present
-
     - name: Start nginx
       ansible.windows.win_command: |
-        C:\User\Admin\Downloads\nginx\nginx.exe
-
+        C:\nginx\nginx.exe
