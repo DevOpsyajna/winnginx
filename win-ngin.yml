@@ -45,15 +45,6 @@
         dest: C:\nginx
         creates: C:\nginx\nginx.exe
 
-    - name: List contents of nginx directory
-      ansible.windows.win_command: |
-        Get-ChildItem -Path C:\nginx
-      register: dir_contents
-
-    - name: Debug directory contents
-      ansible.builtin.debug:
-        msg: "Contents of C:\nginx: {{ dir_contents.stdout_lines }}"
-
     - name: Verify nginx.exe exists
       ansible.windows.win_stat:
         path: C:\nginx\nginx.exe
