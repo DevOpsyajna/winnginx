@@ -7,7 +7,7 @@
         path: C:\Users\Admin\Downloads
         state: directory
 
-    - name: Debug: Download directory exists
+    - name: Debug - Download directory exists
       ansible.builtin.debug:
         msg: "Download directory exists"
 
@@ -16,7 +16,7 @@
         url: https://nginx.org/download/nginx-1.18.0.zip
         dest: C:\Users\Admin\Downloads\nginx.zip
 
-    - name: Debug: NGINX zip downloaded
+    - name: Debug - NGINX zip downloaded
       ansible.builtin.debug:
         msg: "NGINX zip downloaded"
 
@@ -24,7 +24,7 @@
       ansible.windows.win_shell: |
         Expand-Archive -Path C:\Users\Admin\Downloads\nginx.zip -DestinationPath C:\Users\Admin\Downloads\nginx
 
-    - name: Debug: NGINX extracted
+    - name: Debug - NGINX extracted
       ansible.builtin.debug:
         msg: "NGINX extracted"
 
@@ -35,7 +35,7 @@
         chdir: C:\Users\Admin\Downloads\nginx\nginx-1.18.0
       register: nginx_install_result
 
-    - name: Debug: NGINX installation result
+    - name: Debug - NGINX installation result
       ansible.builtin.debug:
         var: nginx_install_result
 
