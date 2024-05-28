@@ -1,6 +1,7 @@
 ---
 - name: Install and configure Nginx on Windows
   hosts: 172.16.0.67
+  gather_facts: no
   tasks:
     - name: Ensure the download directory exists
       ansible.windows.win_file:
@@ -17,20 +18,21 @@
         Expand-Archive -Path C:\Users\Admin\Downloads\nginx.zip -DestinationPath C:\Users\Admin\Downloads\nginx
 
     - name: Check if Nginx executable exists
-      ansible.windows.win_shell: Test-Path -Path 'C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe'
-      register: nginx_executable_exists
+      ansible.windows.win_stat:
+        path: C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe
+      register: nginx_executable
 
     - name: Debug: Nginx executable exists
       ansible.builtin.debug:
-        var: nginx_executable_exists
+        var: nginx_executable.exists
 
     - name: Install Nginx
       ansible.windows.win_shell: Start-Process -FilePath 'C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe' -NoNewWindow -Wait
-      when: nginx_executable_exists.stdout == "True"
+      when: nginx_executable.exists
 
     - name: Start Nginx service
       ansible.windows.win_service:
         name: nginx
         state: started
         start_mode: auto
-      when: nginx_executable_exists.stdout == "True"
+      when: nginx_executable.exists
