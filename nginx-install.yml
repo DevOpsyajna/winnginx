@@ -1,3 +1,4 @@
+---
 - name: Install nginx
   ansible.windows.win_command: |
     C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe /S
