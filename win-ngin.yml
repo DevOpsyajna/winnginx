@@ -11,3 +11,18 @@
         src: C:\nginx.zip
         dest: C:\nginx
         creates: C:\nginx\nginx.exe
+
+    - name: Ensure nginx is not installed
+      ansible.windows.win_package:
+        name: nginx
+        state: absent
+
+    - name: Install nginx
+      ansible.windows.win_package:
+        path: C:\nginx\nginx-1.18.0.zip
+        state: present
+
+    - name: Start nginx
+      ansible.windows.win_command: |
+        C:\nginx\nginx.exe
+
