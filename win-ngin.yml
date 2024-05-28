@@ -1,0 +1,27 @@
+---
+- name: Install NGINX on Windows
+  hosts: windows
+  tasks:
+    - name: Ensure destination directory exists
+      ansible.builtin.win_file:
+        path: C:\nginx
+        state: directory
+
+    - name: Download NGINX
+      ansible.builtin.win_get_url:
+        url: https://nginx.org/download/nginx-1.24.0.zip
+        dest: C:\nginx\nginx.zip
+
+    - name: Unzip NGINX
+      ansible.builtin.win_unzip:
+        src: C:\nginx\nginx.zip
+        dest: C:\nginx
+        creates: C:\nginx\nginx-1.24.0
+
+    - name: Create NGINX Service
+      ansible.builtin.win_service:
+        name: nginx
+        display_name: NGINX
+        start_mode: auto
+        path: C:\nginx\nginx-1.24.0\nginx.exe
+        state: started
