@@ -43,11 +43,11 @@
       community.windows.win_unzip:
         src: C:\User\Admin\Downloads\nginx.zip
         dest: C:\nginx
-        creates: C:\nginx\nginx.exe
+        creates: C:\nginx\nginx-1.18.0\nginx.exe
 
     - name: Verify nginx.exe exists
       ansible.windows.win_stat:
-        path: C:\nginx\nginx.exe
+        path: C:\nginx\nginx-1.18.0\nginx.exe
       register: nginx_exe
 
     - name: Debug nginx.exe existence
@@ -56,5 +56,5 @@
 
     - name: Start nginx
       ansible.windows.win_shell: |
-        Start-Process -NoNewWindow -FilePath "C:\nginx\nginx.exe"
+        Start-Process -NoNewWindow -FilePath "C:\nginx\nginx-1.18.0\nginx.exe"
       when: nginx_exe.stat.exists
