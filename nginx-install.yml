@@ -28,6 +28,12 @@
       register: uninstall_result
       ignore_errors: yes
 
+    - name: Remove existing nginx files if any
+      ansible.windows.win_file:
+        path: C:\nginx
+        state: absent
+      when: uninstall_result is not skipped
+
     - name: Recreate nginx directory
       ansible.windows.win_file:
         path: C:\nginx
@@ -37,12 +43,16 @@
       community.windows.win_unzip:
         src: C:\User\Admin\Downloads\nginx.zip
         dest: C:\nginx
-        creates: C:\nginx\nginx-1.8.0\nginx.exe
+        creates: C:\nginx\nginx.exe
 
     - name: Verify nginx.exe exists
       ansible.windows.win_stat:
         path: C:\nginx\nginx-1.8.0\nginx.exe
       register: nginx_exe
+
+    - name: Debug nginx.exe existence
+      ansible.builtin.debug:
+        msg: "nginx.exe exists: {{ nginx_exe.stat.exists }}"
 
     - name: Start nginx
       ansible.windows.win_command: |
