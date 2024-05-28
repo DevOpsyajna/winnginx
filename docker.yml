@@ -1,6 +1,6 @@
 ---
 - name: Install Docker Desktop on Windows
-  hosts: windows
+  hosts: all
   tasks:
     - name: Download Docker Desktop installer
       ansible.windows.win_get_url:
