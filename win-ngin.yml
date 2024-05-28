@@ -1,6 +1,6 @@
 ---
 - name: Install NGINX on Windows
-  hosts: windows
+  hosts: all
   tasks:
     - name: Ensure destination directory exists
       ansible.builtin.win_file:
