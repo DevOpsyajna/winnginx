@@ -38,10 +38,6 @@
         src: C:\User\Admin\Downloads\nginx.zip
         dest: C:\nginx
 
-    - name: Debug nginx.exe existence
-      ansible.builtin.debug:
-        msg: "nginx.exe exists: {{ nginx_exe.stat.exists }}"
-
     - name: Start nginx
       ansible.windows.win_command: |
         C:\nginx\nginx-1.8.0\nginx.exe
