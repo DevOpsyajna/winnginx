@@ -1,47 +1,10 @@
----
-- name: Install and configure nginx on Windows
-  hosts: 172.16.0.67
-  tasks:
-    - name: Ensure the download directory exists
-      ansible.windows.win_file:
-        path: C:\Users\Admin\Downloads
-        state: directory
+- name: Install nginx
+  ansible.windows.win_command: |
+    C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe /S
+  args:
+    chdir: C:\Users\Admin\Downloads\nginx\nginx-1.18.0
+  register: nginx_install_result
 
-    - name: Debug - Download directory exists
-      ansible.builtin.debug:
-        msg: "Download directory exists"
-
-    - name: Download nginx
-      ansible.windows.win_get_url:
-        url: https://nginx.org/download/nginx-1.18.0.zip
-        dest: C:\Users\Admin\Downloads\nginx.zip
-
-    - name: Debug - NGINX zip downloaded
-      ansible.builtin.debug:
-        msg: "NGINX zip downloaded"
-
-    - name: Extract nginx
-      ansible.windows.win_shell: |
-        Expand-Archive -Path C:\Users\Admin\Downloads\nginx.zip -DestinationPath C:\Users\Admin\Downloads\nginx
-
-    - name: Debug - NGINX extracted
-      ansible.builtin.debug:
-        msg: "NGINX extracted"
-
-    - name: Install nginx
-      ansible.windows.win_command: |
-        C:\Users\Admin\Downloads\nginx\nginx-1.18.0\nginx.exe /S
-      args:
-        chdir: C:\Users\Admin\Downloads\nginx\nginx-1.18.0
-      register: nginx_install_result
-
-    - name: Debug - NGINX installation result
-      ansible.builtin.debug:
-        var: nginx_install_result
-
-    - name: Start nginx service
-      ansible.windows.win_service:
-        name: nginx
-        state: started
-        start_mode: auto
-      when: nginx_install_result.rc == 0  # Only start service if installation was successful
+- name: Debug - NGINX installation result
+  ansible.builtin.debug:
+    var: nginx_install_result
