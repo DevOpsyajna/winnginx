@@ -1,6 +1,6 @@
 ---
 - name: Ensure Nginx is running on Windows
-  hosts: windows
+  hosts: 172.16.0.62
   tasks:
     - name: Check if nginx.exe exists
       win_shell: Test-Path -Path 'C:\\Users\\Admin\\Downloads\\nginx\\nginx-1.18.0\\nginx.exe'
