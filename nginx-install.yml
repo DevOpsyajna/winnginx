@@ -1,5 +1,5 @@
 - name: Install and configure nginx on Windows
-  hosts: windows
+  hosts: 172.16.0.67
   tasks:
     - name: Ensure the download directory exists
       ansible.windows.win_file:
