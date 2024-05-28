@@ -1,6 +1,6 @@
 ---
 - name: Download, Install, and Start NGINX on Windows
-  hosts: windows
+  hosts: 172.16.0.67
   tasks:
     - name: Ensure download directory exists
       ansible.windows.win_file:
